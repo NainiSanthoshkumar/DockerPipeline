@@ -2,4 +2,4 @@ FROM ngnix
 EXPOSE 80
 MAINTAINER santhu
 LABEL first pipeline
-COPY index.html /usr/share/nginx/html
+COPY index.html /usr/share/nginx/html/
