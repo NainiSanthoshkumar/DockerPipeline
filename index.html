@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food booking · basic</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(145deg, #fef9f0 0%, #fff4e6 100%);
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+      margin: 0;
+    }
+
+    .booking-card {
+      background-color: #ffffff;
+      max-width: 680px;
+      width: 100%;
+      border-radius: 36px;
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2), 0 8px 24px -6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+      border: 1px solid rgba(255, 200, 130, 0.3);
+    }
+
+    .booking-header {
+      background: #2d2a24;
+      background-image: radial-gradient(circle at 10% 30%, #4a3f35, #1e1b17);
+      padding: 2rem 2rem 1.5rem 2rem;
+      color: #ffe9d6;
+    }
+
+    .booking-header h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .booking-header h1 span {
+      font-size: 2.4rem;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    }
+
+    .booking-header p {
+      font-size: 1rem;
+      opacity: 0.85;
+      font-weight: 400;
+      color: #d9c7b5;
+      margin-left: 0.2rem;
+      letter-spacing: 0.3px;
+    }
+
+    .booking-form {
+      padding: 2rem 2rem 2.2rem 2rem;
+      background: #ffffff;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 1.2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5f4d3a;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    label i {
+      font-style: normal;
+      font-size: 1.1rem;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+      padding: 0.85rem 1rem;
+      border-radius: 20px;
+      border: 2px solid #f0e3d6;
+      background-color: #fefcf9;
+      font-size: 0.98rem;
+      color: #2e241c;
+      transition: all 0.2s ease;
+      outline: none;
+      width: 100%;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #c49a6c;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(196, 154, 108, 0.15);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #b8a99b;
+      font-weight: 300;
+    }
+
+    select {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%238b735e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+      background-repeat: no-repeat;
+      background-position: right 1.2rem center;
+      background-size: 1rem;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+      border-radius: 24px;
+    }
+
+    .booking-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+      margin-top: 2rem;
+      padding-top: 0.5rem;
+    }
+
+    .btn {
+      border: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.95rem 2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      letter-spacing: 0.3px;
+      background: #f5efe9;
+      color: #4f3f31;
+      flex: 1 0 auto;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .btn-primary {
+      background: #2d2a24;
+      color: #ffffff;
+      box-shadow: 0 8px 18px -6px rgba(45, 42, 36, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: #1f1c18;
+      transform: scale(1.01);
+    }
+
+    .btn-secondary {
+      background: #f3ede7;
+      color: #4f3f31;
+      border: 1px solid #e2d4c8;
+    }
+
+    .btn-secondary:hover {
+      background: #e9dfd6;
+    }
+
+    .badge {
+      background-color: #f8e7d6;
+      color: #7a5e44;
+      padding: 0.3rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: inline-block;
+    }
+
+    .order-summary {
+      margin-top: 1.8rem;
+      background: #fdf8f2;
+      border-radius: 24px;
+      padding: 1.3rem 1.5rem;
+      border: 1px dashed #dccbbc;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .order-summary p {
+      font-size: 0.95rem;
+      color: #5a4a3b;
+      font-weight: 500;
+    }
+
+    .order-summary strong {
+      color: #2d2a24;
+      font-weight: 700;
+      font-size: 1.15rem;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: #a48e7b;
+      margin-top: 1rem;
+      text-align: center;
+      border-top: 1px solid #f0e6dd;
+      padding-top: 1.2rem;
+      letter-spacing: 0.2px;
+    }
+
+    @media (max-width: 520px) {
+      .booking-card {
+        border-radius: 28px;
+      }
+      .booking-header {
+        padding: 1.5rem 1.5rem 1rem 1.5rem;
+      }
+      .booking-header h1 {
+        font-size: 1.9rem;
+      }
+      .booking-form {
+        padding: 1.5rem;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .form-group.full-width {
+        grid-column: 1;
+      }
+      .booking-actions {
+        flex-direction: column-reverse;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="booking-card">
+    <div class="booking-header">
+      <h1>
+        <span>🍜</span> Food booking
+      </h1>
+      <p>Reserve your table &amp; pre‑order your meal</p>
+    </div>
+
+    <form class="booking-form" onsubmit="event.preventDefault(); alert('✅ Your food booking request has been received! (demo)');">
+      <div class="form-grid">
+        <!-- Full name -->
+        <div class="form-group">
+          <label for="name"><i>👤</i> Full name</label>
+          <input type="text" id="name" name="name" placeholder="e.g. Alex Johnson" required>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email"><i>✉️</i> Email</label>
+          <input type="email" id="email" name="email" placeholder="alex@example.com" required>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone"><i>📞</i> Phone</label>
+          <input type="tel" id="phone" name="phone" placeholder="+1 234 567 890" required>
+        </div>
+
+        <!-- Number of guests -->
+        <div class="form-group">
+          <label for="guests"><i>🧑‍🤝‍🧑</i> Guests</label>
+          <select id="guests" name="guests" required>
+            <option value="" disabled selected>Select number</option>
+            <option value="1">1 person</option>
+            <option value="2">2 people</option>
+            <option value="3">3 people</option>
+            <option value="4">4 people</option>
+            <option value="5">5 people</option>
+            <option value="6+">6+ people</option>
+          </select>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label for="date"><i>📅</i> Date</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+
+        <!-- Time -->
+        <div class="form-group">
+          <label for="time"><i>⏰</i> Time</label>
+          <input type="time" id="time" name="time" required>
+        </div>
+
+        <!-- Meal selection (full width) -->
+        <div class="form-group full-width">
+          <label for="meal"><i>🍽️</i> Choose your dish</label>
+          <select id="meal" name="meal" required>
+            <option value="" disabled selected>— Select a meal —</option>
+            <option value="Margherita Pizza">🍕 Margherita Pizza — $12.90</option>
+            <option value="Spaghetti Carbonara">🍝 Spaghetti Carbonara — $14.50</option>
+            <option value="Grilled Salmon">🐟 Grilled Salmon — $19.20</option>
+            <option value="Vegetable Curry">🥘 Vegetable Curry — $11.80</option>
+            <option value="Cheeseburger">🍔 Cheeseburger — $13.40</option>
+            <option value="Caesar Salad">🥗 Caesar Salad — $9.90</option>
+            <option value="Pad Thai">🍜 Pad Thai — $13.20</option>
+          </select>
+        </div>
+
+        <!-- Special requests (full width) -->
+        <div class="form-group full-width">
+          <label for="requests"><i>📝</i> Special requests (optional)</label>
+          <textarea id="requests" name="requests" placeholder="Allergies, window table, birthday cake..."></textarea>
+        </div>
+      </div>
+
+      <!-- dynamic order summary (shows selected meal / guests / date) -->
+      <div class="order-summary" id="liveSummary">
+        <p>🍴 <strong id="summaryMeal">No meal selected yet</strong></p>
+        <span class="badge" id="summaryGuests">0 guests</span>
+      </div>
+
+      <div class="booking-actions">
+        <button type="reset" class="btn btn-secondary" id="resetBtn">⟲ Reset</button>
+        <button type="submit" class="btn btn-primary">✅ Confirm booking</button>
+      </div>
+      <div class="note">
+        ⏱️ This is a basic demo — your reservation is not stored.
+      </div>
+    </form>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const mealSelect = document.getElementById('meal');
+      const guestsSelect = document.getElementById('guests');
+      const summaryMeal = document.getElementById('summaryMeal');
+      const summaryGuests = document.getElementById('summaryGuests');
+      const resetBtn = document.getElementById('resetBtn');
+
+      // Helper: update the order summary based on current selections
+      function updateSummary() {
+        // Meal summary
+        if (mealSelect.value && mealSelect.value !== "") {
+          // get the text of selected option (without the price part to keep it clean)
+          const selectedOption = mealSelect.options[mealSelect.selectedIndex];
+          const fullText = selectedOption.textContent; // e.g., "🍕 Margherita Pizza — $12.90"
+          // Extract the dish name (everything before the '—' symbol, and remove leading emoji+space)
+          let dishName = fullText.split('—')[0].trim();
+          // remove any leading emoji characters (simple approach: remove non-ASCII? keep it simple but nice)
+          // We'll keep emoji as it looks friendly.
+          summaryMeal.textContent = dishName || 'Selected meal';
+        } else {
+          summaryMeal.textContent = 'No meal selected yet';
+        }
+
+        // Guests summary
+        if (guestsSelect.value && guestsSelect.value !== "") {
+          if (guestsSelect.value === '6+') {
+            summaryGuests.textContent = '6+ guests';
+          } else {
+            const num = guestsSelect.value;
+            summaryGuests.textContent = num + (num === '1' ? ' guest' : ' guests');
+          }
+        } else {
+          summaryGuests.textContent = '0 guests';
+        }
+      }
+
+      // Initial update (in case of autofill)
+      updateSummary();
+
+      // Event listeners for live summary updates
+      mealSelect.addEventListener('change', updateSummary);
+      guestsSelect.addEventListener('change', updateSummary);
+
+      // Optional: also update if the user resets the form manually
+      // but we need to wait a tick for the reset to happen
+      resetBtn.addEventListener('click', function(e) {
+        // Use setTimeout to let the reset take effect first
+        setTimeout(() => {
+          updateSummary();
+        }, 0);
+      });
+
+      // Also handle form reset event (if user presses reset on another way, but we have only one reset button)
+      const form = document.querySelector('.booking-form');
+      form.addEventListener('reset', function() {
+        setTimeout(updateSummary, 0);
+      });
+
+      // For the date field, set min to today (nice touch)
+      const dateInput = document.getElementById('date');
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.min = today;
+
+      // Set a default time (e.g., 19:00) — optional but makes demo friendlier
+      const timeInput = document.getElementById('time');
+      if (!timeInput.value) {
+        timeInput.value = '19:00';
+      }
+
+      // Optional: Pre-select a meal? no, keep it empty to show placeholder.
+      // But we can set a simple default for demonstration? Not necessary.
+    })();
+  </script>
+</body>
+</html>
